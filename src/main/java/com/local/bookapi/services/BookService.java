@@ -1,11 +1,15 @@
 package com.local.bookapi.services;
 
 import com.local.bookapi.entities.Book;
+import com.local.bookapi.entities.Notification;
 import com.local.bookapi.exceptions.BookNotFoundException;
+import com.local.bookapi.kafka.BookKafkaProducer;
 import com.local.bookapi.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,8 +19,17 @@ public class BookService {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private BookKafkaProducer bookKafkaProducer;
+
     public Book addBook(Book book) {
-        return this.bookRepository.save(book);
+        Book newBook = this.bookRepository.save(book);
+        Notification notification = new Notification();
+        notification.setBook(newBook);
+        notification.setMessage(String.format("Book of id %d added", newBook.getId()));
+        notification.setTimeStamp(timeStamp());
+        bookKafkaProducer.sendMessage(notification);
+        return newBook;
     }
 
     public List<Book> getAllBooks(){
@@ -44,11 +57,27 @@ public class BookService {
             book.setAuthorName(newBook.getAuthorName());
         }
 
-        return this.bookRepository.save(book);
+        Book newBook1 = this.bookRepository.save(book);
+        Notification notification = new Notification();
+        notification.setBook(newBook1);
+        notification.setMessage(String.format("Book of id %d updated", newBook1.getId()));
+        notification.setTimeStamp(timeStamp());
+        bookKafkaProducer.sendMessage(notification);
+        return newBook1;
     }
 
     public void deleteBookById(int id) {
+        Notification notification = new Notification();
+        notification.setMessage(String.format("Book of id %d deleted", id));
+        notification.setTimeStamp(timeStamp());
+        bookKafkaProducer.sendMessage(notification);
         this.bookRepository.deleteById(id);
+    }
+
+    public String timeStamp(){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        return dtf.format(now);
     }
 
 }

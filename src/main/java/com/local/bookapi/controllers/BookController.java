@@ -2,7 +2,6 @@ package com.local.bookapi.controllers;
 
 import com.local.bookapi.entities.Book;
 import com.local.bookapi.services.BookService;
-import org.hibernate.annotations.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -23,7 +22,6 @@ public class BookController {
     }
 
     @GetMapping(value = "/book")
-    @CachePut(value = "books", key = "#book.Id")
     public List<Book> getAllBooks(){
         return bookService.getAllBooks();
     }
