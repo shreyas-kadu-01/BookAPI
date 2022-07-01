@@ -1,6 +1,0 @@
-com/local/bookapi/entities/Book.class
-com/local/bookapi/services/BookService.class
-com/local/bookapi/BookApiApplication.class
-com/local/bookapi/controllers/BookController.class
-com/local/bookapi/exceptions/BookNotFoundException.class
-com/local/bookapi/repositories/BookRepository.class
