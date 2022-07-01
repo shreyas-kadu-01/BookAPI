@@ -1,5 +1,6 @@
 package com.local.bookapi.kafka;
 
+import com.local.bookapi.entities.Book;
 import com.local.bookapi.entities.Notification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,17 @@ public class BookKafkaProducer {
         LOGGER.info(String.format("Message is %s", notification.toString()));
 
         Message<Notification> message = MessageBuilder
+                .withPayload(notification)
+                .setHeader(KafkaHeaders.TOPIC, "books")
+                .build();
+
+        kafkaTemplate.send(message);
+    }
+
+    public void sendMessage(Book notification){
+        LOGGER.info(String.format("Message is %s", notification.toString()));
+
+        Message<Book> message = MessageBuilder
                 .withPayload(notification)
                 .setHeader(KafkaHeaders.TOPIC, "books")
                 .build();

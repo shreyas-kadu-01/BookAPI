@@ -1,5 +1,6 @@
 package com.local.bookapi.controllers;
 
+import com.local.bookapi.entities.Book;
 import com.local.bookapi.entities.Notification;
 import com.local.bookapi.kafka.BookKafkaProducer;
 import com.local.bookapi.services.NotificationService;
@@ -22,7 +23,7 @@ public class NotificationController{
     }
 
     @PostMapping("/publish")
-    public ResponseEntity<String> publish(@RequestBody Notification notification){
+    public ResponseEntity<String> publish(@RequestBody Book notification){
         bookKafkaProducer.sendMessage(notification);
         return ResponseEntity.ok("Json Message sent to topic");
     }
