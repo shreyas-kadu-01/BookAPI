@@ -1,6 +1,7 @@
 package com.local.bookapi.config;
 
 import com.local.bookapi.entities.Book;
+import com.local.bookapi.entities.KafkaMessage;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,8 +25,8 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<Integer, Book> redisTemplate() {
-        RedisTemplate<Integer, Book> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<Integer, Object> redisTemplate() {
+        RedisTemplate<Integer, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(jedisConnectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());

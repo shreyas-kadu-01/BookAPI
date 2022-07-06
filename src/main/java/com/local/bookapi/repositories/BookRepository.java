@@ -29,8 +29,8 @@ public class BookRepository {
         return redisTemplate.opsForHash().values(KEY);
     }
 
-    public Book findById(int id) {
-         Book b = (Book) redisTemplate.opsForHash().get(KEY,id);
+    public Book findById(int id) throws BookNotFoundException{
+        Book b = (Book) redisTemplate.opsForHash().get(KEY,id);
         if(b != null) {
             return b;
         } else {
